@@ -7,13 +7,16 @@
 //
 
 import UIKit
-import FXBlurView
+import FXBlurView   //高斯模糊
+
+//左菜单
 
 class LeftViewController: UIViewController,UITableViewDataSource,UITableViewDelegate {
 
     var backgroundImageView:UIImageView?
     var frostedView = FXBlurView()
     
+    //文件内私有
     fileprivate var _tableView :UITableView!
     fileprivate var tableView: UITableView {
         get{
@@ -37,29 +40,40 @@ class LeftViewController: UIViewController,UITableViewDataSource,UITableViewDele
     }
     
     override func viewDidLoad() {
+        
         super.viewDidLoad()
+        
+        //主题颜色
         self.view.backgroundColor = V2EXColor.colors.v2_backgroundColor;
         
+        //背景图片
         self.backgroundImageView = UIImageView()
         self.backgroundImageView!.frame = self.view.frame
         self.backgroundImageView!.contentMode = .scaleToFill
         view.addSubview(self.backgroundImageView!)
         
+        //高斯模糊
         frostedView.underlyingView = self.backgroundImageView!
         frostedView.isDynamic = false
         frostedView.tintColor = UIColor.black
         frostedView.frame = self.view.frame
         self.view.addSubview(frostedView)
         
+        //添加table
         self.view.addSubview(self.tableView);
+        //限定
         self.tableView.snp.makeConstraints{ (make) -> Void in
             make.top.right.bottom.left.equalTo(self.view);
         }
         
+        //判断登录
         if V2User.sharedInstance.isLogin {
             self.getUserInfo(V2User.sharedInstance.username!)
         }
+        
+        //主题控制
         self.thmemChangedHandler = {[weak self] (style) -> Void in
+            
             if V2EXColor.sharedInstance.style == V2EXColor.V2EXColorStyleDefault {
                 self?.backgroundImageView?.image = UIImage(named: "32.jpg")
             }
@@ -69,13 +83,19 @@ class LeftViewController: UIViewController,UITableViewDataSource,UITableViewDele
             self?.frostedView.updateAsynchronously(true, completion: nil)
         }
     }
+    
+    //tableview delegate methods
+    
     func numberOfSections(in tableView: UITableView) -> Int {
         return 3
     }
+    
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return [1,3,2][section]
     }
+    
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+        
         if (indexPath.section == 1 && indexPath.row == 2)
         
         {
@@ -83,7 +103,9 @@ class LeftViewController: UIViewController,UITableViewDataSource,UITableViewDele
         }
         return [180,55+SEPARATOR_HEIGHT,55+SEPARATOR_HEIGHT][indexPath.section]
     }
+    
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+    
         if indexPath.section == 0 {
             if  indexPath.row == 0 {
                 let cell = getCell(tableView, cell: LeftUserHeadCell.self, indexPath: indexPath);
@@ -115,13 +137,18 @@ class LeftViewController: UIViewController,UITableViewDataSource,UITableViewDele
             return cell
         }
     }
+    
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+    
         if indexPath.section == 0 {
             if indexPath.row == 0 {
+                //判断登录
                 if !V2User.sharedInstance.isLogin {
                     let loginViewController = LoginViewController()
                     V2Client.sharedInstance.centerViewController!.navigationController?.present(loginViewController, animated: true, completion: nil);
                 }else{
+                    
+                    //进入我的中心
                     let memberViewController = MyCenterViewController()
                     memberViewController.username = V2User.sharedInstance.username
                     V2Client.sharedInstance.centerNavigation?.pushViewController(memberViewController, animated: true)
@@ -130,32 +157,42 @@ class LeftViewController: UIViewController,UITableViewDataSource,UITableViewDele
             }
         }
         else if indexPath.section == 1 {
+            //判断登录
             if !V2User.sharedInstance.isLogin {
                 let loginViewController = LoginViewController()
                 V2Client.sharedInstance.centerNavigation?.present(loginViewController, animated: true, completion: nil);
                 return
             }
+            
+            //进入我的中心
             if indexPath.row == 0 {
+                
                 let memberViewController = MyCenterViewController()
                 memberViewController.username = V2User.sharedInstance.username
                 V2Client.sharedInstance.centerNavigation?.pushViewController(memberViewController, animated: true)
             }
             else if indexPath.row == 1 {
+                
+                //通知中心
                 let notificationsViewController = NotificationsViewController()
                 V2Client.sharedInstance.centerNavigation?.pushViewController(notificationsViewController, animated: true)
             }
             else if indexPath.row == 2 {
+                
+                //收藏
                 let favoritesViewController = FavoritesViewController()
                 V2Client.sharedInstance.centerNavigation?.pushViewController(favoritesViewController, animated: true)
             }
             V2Client.sharedInstance.drawerController?.closeDrawer(animated: true, completion: nil)
-            
         }
         else if indexPath.section == 2 {
+            
+            //节点查询
             if indexPath.row == 0 {
                 let nodesViewController = NodesViewController()
                 V2Client.sharedInstance.centerViewController!.navigationController?.pushViewController(nodesViewController, animated: true)
             }
+            //更多查询
             else if indexPath.row == 1 {
                 let moreViewController = MoreViewController()
                 V2Client.sharedInstance.centerViewController!.navigationController?.pushViewController(moreViewController, animated: true)
@@ -165,12 +202,13 @@ class LeftViewController: UIViewController,UITableViewDataSource,UITableViewDele
     }
     
     
-    
     // MARK: 获取用户信息
     func getUserInfo(_ userName:String){
+        
         UserModel.getUserInfoByUsername(userName) {(response:V2ValueResponse<UserModel>) -> Void in
+           
             if response.success {
-//                self?.tableView.reloadData()
+                //self?.tableView.reloadData()
                 NSLog("获取用户信息成功")
             }
             else{

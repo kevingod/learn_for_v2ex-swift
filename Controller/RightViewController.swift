@@ -9,7 +9,11 @@
 import UIKit
 import FXBlurView
 
+//右边菜单
+
 class RightViewController: UIViewController,UITableViewDelegate,UITableViewDataSource {
+    
+    //节点数组
     let rightNodes = [
         rightNodeModel(nodeName: NSLocalizedString("tech" ), nodeTab: "tech"),
         rightNodeModel(nodeName: NSLocalizedString("creative" ), nodeTab: "creative"),
@@ -25,6 +29,7 @@ class RightViewController: UIViewController,UITableViewDelegate,UITableViewDataS
         rightNodeModel(nodeName: NSLocalizedString("nodes" ), nodeTab: "nodes"),
         rightNodeModel(nodeName: NSLocalizedString("members" ), nodeTab: "members"),
     ]
+    
     var currentSelectedTabIndex = 0;
     /**
      第一次自动高亮的cell，
@@ -58,7 +63,9 @@ class RightViewController: UIViewController,UITableViewDelegate,UITableViewDataS
     }
     
     override func viewDidLoad() {
+        
         super.viewDidLoad()
+        
         self.view.backgroundColor = V2EXColor.colors.v2_backgroundColor;
         
         var currentTab = V2EXSettings.sharedInstance[kHomeTab]
@@ -82,6 +89,8 @@ class RightViewController: UIViewController,UITableViewDelegate,UITableViewDataS
         self.tableView.snp.makeConstraints{ (make) -> Void in
             make.top.right.bottom.left.equalTo(self.view);
         }
+        
+        //主题切换
         self.thmemChangedHandler = {[weak self] (style) -> Void in
             if V2EXColor.sharedInstance.style == V2EXColor.V2EXColorStyleDefault {
                 self?.backgroundImageView?.image = UIImage(named: "32.jpg")
@@ -97,6 +106,7 @@ class RightViewController: UIViewController,UITableViewDelegate,UITableViewDataS
         let paddingTop = (SCREEN_HEIGHT - CGFloat(rowCount) * rowHeight) / 2
         self.tableView.tableHeaderView = UIView(frame: CGRect(x: 0, y: 0, width: SCREEN_WIDTH, height: paddingTop))
     }
+    
     func maximumRightDrawerWidth() -> CGFloat{
         // 调整RightView宽度
         let cell = RightNodeTableViewCell()
@@ -124,15 +134,20 @@ class RightViewController: UIViewController,UITableViewDelegate,UITableViewDataS
         cell.nodeNameLabel.text = self.rightNodes[indexPath.row].nodeName
         return cell ;
     }
+    
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        
         if let highLightCell = self.firstAutoHighLightCell{
             self.firstAutoHighLightCell = nil
             if(indexPath.row != self.currentSelectedTabIndex){
                 highLightCell.setSelected(false, animated: false)
             }
         }
+        //获得当前节点
         let node = self.rightNodes[indexPath.row];
+        //捕捉当前节点
         V2Client.sharedInstance.centerViewController?.tab = node.nodeTab
+        //刷新page
         V2Client.sharedInstance.centerViewController?.refreshPage()
         V2Client.sharedInstance.drawerController?.closeDrawer(animated: true, completion: nil)
     }

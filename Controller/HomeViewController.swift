@@ -17,6 +17,8 @@ import MJRefresh
 
 let kHomeTab = "me.fin.homeTab"
 
+//中间的话题列表 一堆cell
+
 class HomeViewController: UIViewController {
     var topicList:Array<TopicListModel>?
     var tab:String? = nil

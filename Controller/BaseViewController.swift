@@ -8,6 +8,8 @@
 
 import UIKit
 
+//有一个旋转加载视图
+
 class BaseViewController: UIViewController {
     fileprivate weak var _loadView:V2LoadingView?
     
