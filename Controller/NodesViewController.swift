@@ -7,11 +7,18 @@
 //
 
 import UIKit
+
+//节点列表
+
 class NodesViewController: BaseViewController {
+
     var nodeGroupArray:[NodeGroupModel]?
     var collectionView:UICollectionView?
+    
     override func viewDidLoad() {
+       
         super.viewDidLoad()
+        
         self.title = NSLocalizedString("Navigation")
         self.view.backgroundColor = V2EXColor.colors.v2_backgroundColor
         
@@ -37,9 +44,9 @@ class NodesViewController: BaseViewController {
     }
 }
 
-
 //MARK: - UICollectionViewDataSource
 extension NodesViewController : UICollectionViewDataSource {
+
     func numberOfSections(in collectionView: UICollectionView) -> Int {
         if let count = self.nodeGroupArray?.count{
             return count
@@ -65,6 +72,7 @@ extension NodesViewController : UICollectionViewDataSource {
 
 //MARK: - UICollectionViewDelegateFlowLayout
 extension NodesViewController : UICollectionViewDelegateFlowLayout {
+    
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
         let nodeModel = self.nodeGroupArray![indexPath.section].children[indexPath.row]
         return CGSize(width: nodeModel.width, height: 25);

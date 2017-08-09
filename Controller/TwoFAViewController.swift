@@ -8,6 +8,8 @@
 
 import UIKit
 
+//2步验证--控制器
+
 class TwoFAViewController: UIViewController ,UITextFieldDelegate{
 
     let backgroundImageView = UIImageView()

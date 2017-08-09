@@ -9,7 +9,10 @@
 import UIKit
 import FXBlurView
 
+//个人中心
+
 class MemberViewController: UIViewController,UITableViewDelegate,UITableViewDataSource ,UIScrollViewDelegate {
+
     var color:CGFloat = 0
     
     var username:String?
@@ -18,6 +21,7 @@ class MemberViewController: UIViewController,UITableViewDelegate,UITableViewData
     var model:MemberModel?
     
     var backgroundImageView:UIImageView?
+    
     fileprivate var _tableView :UITableView!
     fileprivate var tableView: UITableView {
         get{
@@ -36,7 +40,6 @@ class MemberViewController: UIViewController,UITableViewDelegate,UITableViewData
             _tableView.delegate = self
             _tableView.dataSource = self
             return _tableView!;
-            
         }
     }
     
@@ -46,8 +49,11 @@ class MemberViewController: UIViewController,UITableViewDelegate,UITableViewData
     
     var titleView:UIView?
     var titleLabel:UILabel?
+    
     override func viewDidLoad() {
+        
         super.viewDidLoad()
+        
         self.view.backgroundColor = V2EXColor.colors.v2_backgroundColor
         
         self.backgroundImageView = UIImageView(image: UIImage(named: "12.jpg"))
@@ -62,7 +68,6 @@ class MemberViewController: UIViewController,UITableViewDelegate,UITableViewData
         frostedView.tintColor = UIColor.black
         self.view.addSubview(frostedView)
         
-
         self.view.addSubview(self.tableView);
         self.tableView.snp.makeConstraints{ (make) -> Void in
             make.top.right.bottom.left.equalTo(self.view);
@@ -70,7 +75,6 @@ class MemberViewController: UIViewController,UITableViewDelegate,UITableViewData
         
         self.titleView = UIView(frame: CGRect(x: 0, y: 0, width: SCREEN_WIDTH, height: 64))
         self.navigationItem.titleView = self.titleView!
-        
         
         let aloadView = UIActivityIndicatorView(activityIndicatorStyle: .white)
         self.view.addSubview(aloadView)
@@ -90,15 +94,20 @@ class MemberViewController: UIViewController,UITableViewDelegate,UITableViewData
     }
     
     override func viewWillAppear(_ animated: Bool) {
+        
         (self.navigationController as? V2EXNavigationController)?.navigationBarAlpha = 0
         self.changeNavigationBarTintColor()
         (self.navigationController as? V2EXNavigationController)?.navigationBarAlpha = self.tableView.contentOffset.y / 100
     }
+    
     override func viewWillDisappear(_ animated: Bool) {
+    
         (self.navigationController as? V2EXNavigationController)?.navigationBarAlpha = 1
         self.navigationController?.navigationBar.tintColor = V2EXColor.colors.v2_navigationBarTintColor
     }
+    
     override func viewDidDisappear(_ animated: Bool) {
+        
         (self.navigationController as? V2EXNavigationController)?.navigationBarAlpha = 1
         self.navigationController?.navigationBar.tintColor = V2EXColor.colors.v2_navigationBarTintColor
     }
@@ -147,9 +156,6 @@ class MemberViewController: UIViewController,UITableViewDelegate,UITableViewData
         self.tableView.fin_reloadData()
     }
     
-
-
-   
 // MARK: - UIScrollViewDelegate
     func scrollViewDidScroll(_ scrollView: UIScrollView) {
         let offsetY = scrollView.contentOffset.y
@@ -284,7 +290,9 @@ class MemberViewController: UIViewController,UITableViewDelegate,UITableViewData
 
 //MARK: - Block and Follow
 extension MemberViewController{
+    
     func setupBlockAndFollowButtons(){
+        
         if !self.isMember(of: MemberViewController.self){
             return ;
         }

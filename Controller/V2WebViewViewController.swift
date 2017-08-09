@@ -10,6 +10,7 @@ import UIKit
 import WebKit
 
 class V2WebViewViewController: UIViewController ,V2WebViewProgressDelegate ,V2ActivityViewDataSource {
+    
     var webViewProgress: V2WebViewProgress?
     var webViewProgressView: V2WebViewProgressView?
     var webView:WKWebView?
@@ -26,6 +27,7 @@ class V2WebViewViewController: UIViewController ,V2WebViewProgressDelegate ,V2Ac
     }
     
     override func viewDidLoad() {
+    
         super.viewDidLoad()
         self.view.backgroundColor = V2EXColor.colors.v2_backgroundColor
         
@@ -119,7 +121,6 @@ class V2WebViewViewController: UIViewController ,V2WebViewProgressDelegate ,V2Ac
         self.closeButton!.frame = frame
     }
     
-
     deinit{
         NSLog("webview deinit")
     }

@@ -8,11 +8,15 @@
 
 import UIKit
 
+//我的收藏--控制器
+
 class FavoritesViewController: BaseViewController,UITableViewDataSource,UITableViewDelegate {
+    
     var topicList:[TopicListModel]?
     var currentPage = 1
     //最大的Page
     var maxPage = 1
+    
     fileprivate var _tableView :UITableView!
     fileprivate var tableView: UITableView {
         get{
@@ -33,7 +37,9 @@ class FavoritesViewController: BaseViewController,UITableViewDataSource,UITableV
     }
     
     override func viewDidLoad() {
+        
         super.viewDidLoad()
+        
         self.title = NSLocalizedString("favorites")
         self.view.backgroundColor = V2EXColor.colors.v2_backgroundColor
         self.view.addSubview(self.tableView);
@@ -56,10 +62,13 @@ class FavoritesViewController: BaseViewController,UITableViewDataSource,UITableV
     }
     
     func refresh(){
+    
         //根据 tab name 获取帖子列表
         self.currentPage = 1
+        
         TopicListModel.getFavoriteList{
             [weak self](response) -> Void in
+        
             if response.success {
                 if let weakSelf = self , let list = response.value?.0 , let maxPage = response.value?.1{
                     weakSelf.topicList = list

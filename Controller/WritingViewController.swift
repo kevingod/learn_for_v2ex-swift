@@ -9,6 +9,7 @@
 import UIKit
 import YYText
 
+//写东西--控制器
 
 class WritingViewController: UIViewController ,YYTextViewDelegate {
 
@@ -16,7 +17,9 @@ class WritingViewController: UIViewController ,YYTextViewDelegate {
     var topicModel :TopicDetailModel?
     
     override func viewDidLoad() {
+        
         super.viewDidLoad()
+        
         self.title = "写东西"
         self.navigationItem.leftBarButtonItem = UIBarButtonItem(title: "取消", style: .plain, target: self, action: #selector(WritingViewController.leftClick))
 
@@ -58,12 +61,20 @@ class WritingViewController: UIViewController ,YYTextViewDelegate {
     }
 }
 
+//回复--控制器
+
 class ReplyingViewController:WritingViewController {
+    
     var atSomeone:String?
+    
     override func viewDidLoad() {
+    
         super.viewDidLoad()
+    
         self.title = NSLocalizedString("reply")
+        
         if let atSomeone = self.atSomeone {
+            
             let str = NSMutableAttributedString(string: atSomeone)
             str.yy_font = self.textView!.font
             str.yy_color = self.textView!.textColor
@@ -75,17 +86,23 @@ class ReplyingViewController:WritingViewController {
     }
     
     override func viewDidAppear(_ animated: Bool) {
+     
         self.textView?.becomeFirstResponder()
     }
     
     override func rightClick (){
-        if self.textView?.text == nil || (self.textView?.text.Lenght)! <= 0 {
+        
+        if self.textView?.text == nil ||
+            (self.textView?.text.Lenght)! <= 0 {
+            
             return;
         }
 
         V2ProgressHUD.showWithClearMask()
+        
         TopicCommentModel.replyWithTopicId(self.topicModel!, content: self.textView!.text ) {
             (response) in
+        
             if response.success {
                 V2Success("回复成功!")
                 self.dismiss(animated: true, completion: nil)
@@ -96,3 +113,7 @@ class ReplyingViewController:WritingViewController {
         }
     }
 }
+
+
+
+

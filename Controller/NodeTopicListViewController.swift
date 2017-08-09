@@ -8,7 +8,10 @@
 
 import UIKit
 
+//节点详情列表--控制器 home列表类似
+
 class NodeTopicListViewController: BaseViewController ,UITableViewDataSource,UITableViewDelegate  {
+
     var node:NodeModel?
     var nodeId:String?
     var favorited:Bool = false

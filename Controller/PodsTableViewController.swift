@@ -14,9 +14,13 @@ struct PodModel {
     var URL:String?
 }
 
+//开源库列表--控制器
+
 class PodsTableViewController: UITableViewController {
+    
     //                   name   version url
     fileprivate let pods:[PodModel] = [
+        
         PodModel(name: "SnapKit", description: "A Swift Autolayout DSL for iOS & OS X",URL:"https://github.com/SnapKit/SnapKit"),
         
         PodModel(name: "Alamofire", description: "Elegant HTTP Networking in Swift",URL:"https://github.com/Alamofire/Alamofire"),
@@ -55,13 +59,14 @@ class PodsTableViewController: UITableViewController {
     ]
     
     override func viewDidLoad() {
+        
         super.viewDidLoad()
+        
         self.view.backgroundColor = V2EXColor.colors.v2_backgroundColor
         self.title = NSLocalizedString("open-SourceLibraries")
         self.tableView.separatorStyle = .none
         regClass(self.tableView, cell: PodCellTableViewCell.self)
     }
-
 
     // MARK: - Table view data source
 

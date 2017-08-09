@@ -8,16 +8,22 @@
 
 import UIKit
 
+//更多--控制器
+
 class MoreViewController: UITableViewController {
+    
     override func viewDidLoad() {
+        
         super.viewDidLoad()
         
         self.title = NSLocalizedString("more")
         
         self.tableView.separatorStyle = UITableViewCellSeparatorStyle.none;
+        
         regClass(self.tableView, cell: BaseDetailTableViewCell.self)
         
         self.thmemChangedHandler = {[weak self] (style) -> Void in
+            
             self?.view.backgroundColor = V2EXColor.colors.v2_backgroundColor
             self?.tableView.reloadData()
         }
@@ -26,10 +32,13 @@ class MoreViewController: UITableViewController {
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int{
         return 9
     }
+    
     override func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         return [30,50,12,50,50,12,50,50,50][indexPath.row]
     }
+    
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+       
         let cell = getCell(tableView, cell: BaseDetailTableViewCell.self, indexPath: indexPath)
         cell.selectionStyle = .none
         
@@ -70,11 +79,11 @@ class MoreViewController: UITableViewController {
             cell.detailLabel.text = ""
         }
         
-        
         return cell
     }
     
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        
         if indexPath.row == 1 {
             V2Client.sharedInstance.centerNavigation?.pushViewController(SettingsTableViewController(), animated: true)
         }

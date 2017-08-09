@@ -8,10 +8,14 @@
 
 import UIKit
 
+//设置--控制器
+
 class SettingsTableViewController: UITableViewController {
 
     override func viewDidLoad() {
+        
         super.viewDidLoad()
+        
         self.title = NSLocalizedString("viewOptions")
 
         self.tableView.separatorStyle = .none

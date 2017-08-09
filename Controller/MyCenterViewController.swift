@@ -8,9 +8,14 @@
 
 import UIKit
 
+//我的中心
+
 class MyCenterViewController: MemberViewController {
+
     var settingsButton:UIButton?
+    
     override func viewDidLoad() {
+    
         super.viewDidLoad()
         
         self.settingsButton = UIButton(frame: CGRect(x: 0, y: 0, width: 40, height: 40))
@@ -23,11 +28,13 @@ class MyCenterViewController: MemberViewController {
     }
     
     override func getDataSuccessfully(_ aModel: MemberModel) {
+     
         super.getDataSuccessfully(aModel)
         self.settingsButton!.isHidden = false
     }
     
     func accountManagerClick(){
+        
         self.navigationController?.pushViewController(AccountsManagerViewController(), animated: true)
     }
 }

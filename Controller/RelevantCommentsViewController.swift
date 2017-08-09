@@ -10,16 +10,21 @@ import UIKit
 import FXBlurView
 import Shimmer
 
+//查看对话--控制器
+
 class RelevantCommentsNav:V2EXNavigationController , UIViewControllerTransitioningDelegate {
+
     override init(nibName : String?, bundle nibBundleOrNil: Bundle?) {
         super.init(nibName: "", bundle: nil)
     }
+    
     init(comments:[TopicCommentModel]) {
         let viewController = RelevantCommentsViewController()
         viewController.commentsArray = comments
         super.init(rootViewController: viewController)
         self.transitioningDelegate = self
     }
+    
     required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
@@ -30,9 +35,11 @@ class RelevantCommentsNav:V2EXNavigationController , UIViewControllerTransitioni
 }
 
 class RelevantCommentsViewControllerTransionPresent:NSObject,UIViewControllerAnimatedTransitioning {
+    
     func transitionDuration(using transitionContext: UIViewControllerContextTransitioning?) -> TimeInterval {
         return 0.3
     }
+    
     func animateTransition(using transitionContext: UIViewControllerContextTransitioning) {
         let toVC = transitionContext.viewController(forKey: UITransitionContextViewControllerKey.to) as! RelevantCommentsNav
         let container = transitionContext.containerView
@@ -54,7 +61,9 @@ class RelevantCommentsViewControllerTransionPresent:NSObject,UIViewControllerAni
 class RelevantCommentsViewController: UIViewController, UITableViewDelegate,UITableViewDataSource {
     
     var commentsArray:[TopicCommentModel] = []
+    
     fileprivate var dismissing = false
+    
     fileprivate var _tableView :UITableView!
     fileprivate var tableView: UITableView {
         get{

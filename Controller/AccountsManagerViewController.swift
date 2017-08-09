@@ -9,8 +9,11 @@
 import UIKit
 
 /// 多账户管理
+
 class AccountsManagerViewController: UIViewController,UITableViewDataSource,UITableViewDelegate,UIAlertViewDelegate {
+
     fileprivate var users:[LocalSecurityAccountModel] = []
+    
     fileprivate var _tableView :UITableView!
     fileprivate var tableView: UITableView {
         get{
@@ -32,8 +35,11 @@ class AccountsManagerViewController: UIViewController,UITableViewDataSource,UITa
 
         }
     }
+    
     override func viewDidLoad() {
+        
         super.viewDidLoad()
+        
         self.title = NSLocalizedString("accounts")
         self.view.backgroundColor = V2EXColor.colors.v2_backgroundColor
 
@@ -55,7 +61,6 @@ class AccountsManagerViewController: UIViewController,UITableViewDataSource,UITa
         for (_,user) in V2UsersKeychain.sharedInstance.users {
             self.users.append(user)
         }
-
     }
 
     func warningClick(){
@@ -67,6 +72,7 @@ class AccountsManagerViewController: UIViewController,UITableViewDataSource,UITa
         //     账户数量            分割线   退出登录按钮
         return self.users.count   + 1       + 1
     }
+    
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         if indexPath.row < self.users.count {
             return 55
@@ -78,12 +84,15 @@ class AccountsManagerViewController: UIViewController,UITableViewDataSource,UITa
             return 45
         }
     }
+    
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+    
         if indexPath.row < self.users.count {
             let cell = getCell(tableView, cell: AccountListTableViewCell.self, indexPath: indexPath)
             cell.bind(self.users[indexPath.row])
             return cell
         }
+        
         else if indexPath.row == self.users.count {//分割线
             let cell = getCell(tableView, cell: BaseDetailTableViewCell.self, indexPath: indexPath)
             cell.detailMarkHidden = true
@@ -94,6 +103,7 @@ class AccountsManagerViewController: UIViewController,UITableViewDataSource,UITa
             return getCell(tableView, cell: LogoutTableViewCell.self, indexPath: indexPath)
         }
     }
+    
     func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool {
 
         if indexPath.row < self.users.count{
@@ -101,6 +111,7 @@ class AccountsManagerViewController: UIViewController,UITableViewDataSource,UITa
         }
         return false
     }
+    
     func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCellEditingStyle, forRowAt indexPath: IndexPath) {
         if editingStyle == .delete {
             if let username = self.users[indexPath.row].username {
@@ -111,8 +122,8 @@ class AccountsManagerViewController: UIViewController,UITableViewDataSource,UITa
         }
     }
 
-
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        
         self.tableView.deselectRow(at: indexPath, animated: true)
 
         let totalNumOfRows = self.tableView(tableView, numberOfRowsInSection: 0)
@@ -134,6 +145,7 @@ class AccountsManagerViewController: UIViewController,UITableViewDataSource,UITa
             alertView.show()
         }
     }
+    
     func alertView(_ alertView: UIAlertView, clickedButtonAt buttonIndex: Int){
         if alertView.tag > 100000 { //切换账号的alertView
             if buttonIndex == 0 {
@@ -177,3 +189,5 @@ class AccountsManagerViewController: UIViewController,UITableViewDataSource,UITa
         }
     }
 }
+
+

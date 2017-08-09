@@ -8,6 +8,8 @@
 
 import UIKit
 
+//话题详情
+
 class TopicDetailViewController: BaseViewController{
     
     var topicId = "0"
@@ -35,9 +37,9 @@ class TopicDetailViewController: BaseViewController{
             _tableView.delegate = self
             _tableView.dataSource = self
             return _tableView!;
-            
         }
     }
+    
     /// 忽略帖子成功后 ，调用的闭包
     var ignoreTopicHandler : ((String) -> Void)?
     //点击右上角more按钮后，弹出的 activityView
@@ -46,10 +48,14 @@ class TopicDetailViewController: BaseViewController{
     
     //MARK: - 页面事件
     override func viewDidLoad() {
+        
         super.viewDidLoad()
+        
+        //标题
         self.title = NSLocalizedString("postDetails")
         self.view.backgroundColor = V2EXColor.colors.v2_backgroundColor
         self.view.addSubview(self.tableView);
+        
         self.tableView.snp.makeConstraints{ (make) -> Void in
             make.top.right.bottom.left.equalTo(self.view);
         }
@@ -61,8 +67,9 @@ class TopicDetailViewController: BaseViewController{
         self.navigationItem.rightBarButtonItem = UIBarButtonItem(customView: rightButton)
         rightButton.addTarget(self, action: #selector(TopicDetailViewController.rightClick), for: .touchUpInside)
         
-        
+        //加载视图
         self.showLoadingView()
+        //获得数据源
         self.getData()
         
         self.tableView.mj_header = V2RefreshHeader(refreshingBlock: {[weak self] in
@@ -74,9 +81,11 @@ class TopicDetailViewController: BaseViewController{
     }
     
     func getData(){
+    
         //根据 topicId 获取 帖子信息 、回复。
         TopicDetailModel.getTopicDetailById(self.topicId){
             (response:V2ValueResponse<(TopicDetailModel?,[TopicCommentModel])>) -> Void in
+        
             if response.success {
                 
                 if let aModel = response.value!.0{
@@ -92,11 +101,11 @@ class TopicDetailViewController: BaseViewController{
                 self.webViewContentCell = nil
                 
                 self.tableView.reloadData()
-                
             }
             else{
                 V2Error("刷新失败");
             }
+
             if self.tableView.mj_header.isRefreshing(){
                 self.tableView.mj_header.endRefreshing()
             }
@@ -132,6 +141,7 @@ class TopicDetailViewController: BaseViewController{
      获取下一页评论，如果有的话
      */
     func getNextPage(){
+        
         if self.model == nil || self.commentsArray.count <= 0 {
             self.endRefreshingWithNoDataAtAll()
             return;
@@ -163,6 +173,7 @@ class TopicDetailViewController: BaseViewController{
      禁用上拉加载更多，并显示一个字符串提醒
      */
     func endRefreshingWithStateString(_ string:String){
+        
         (self.tableView.mj_footer as! V2RefreshFooter).noMoreDataStateString = string
         self.tableView.mj_footer.endRefreshingWithNoMoreData()
     }
@@ -187,10 +198,13 @@ enum TopicDetailHeaderComponent: Int {
     case title = 0,  webViewContent, other
 }
 
+//扩展
 extension TopicDetailViewController: UITableViewDelegate,UITableViewDataSource {
+    
     func numberOfSections(in tableView: UITableView) -> Int {
         return 2
     }
+    
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         let _section = TopicDetailTableViewSection(rawValue: section)!
         switch _section {
@@ -207,7 +221,9 @@ extension TopicDetailViewController: UITableViewDelegate,UITableViewDataSource {
             return 0;
         }
     }
+    
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+    
         let _section = TopicDetailTableViewSection(rawValue: indexPath.section)!
         var _headerComponent = TopicDetailHeaderComponent.other
         if let headerComponent = TopicDetailHeaderComponent(rawValue: indexPath.row) {
@@ -237,7 +253,9 @@ extension TopicDetailViewController: UITableViewDelegate,UITableViewDataSource {
             return 200
         }
     }
+    
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+    
         let _section = TopicDetailTableViewSection(rawValue: indexPath.section)!
         var _headerComponent = TopicDetailHeaderComponent.other
         if let headerComponent = TopicDetailHeaderComponent(rawValue: indexPath.row) {
@@ -318,7 +336,9 @@ extension TopicDetailViewController: UITableViewDelegate,UITableViewDataSource {
 
 //MARK: - actionSheet
 extension TopicDetailViewController: UIActionSheetDelegate {
+   
     func selectedRowWithActionSheet(_ indexPath:IndexPath){
+
         self.tableView.deselectRow(at: indexPath, animated: true);
 
         //这段代码也可以执行，但是当点击时，会有个0.3秒的dismiss动画。
@@ -346,11 +366,13 @@ extension TopicDetailViewController: UIActionSheetDelegate {
         actionSheet.show(in: self.view)
         
     }
+    
     func actionSheet(_ actionSheet: UIActionSheet, clickedButtonAt buttonIndex: Int) {
         if buttonIndex > 0 && buttonIndex <= 3 {
             self.perform([#selector(TopicDetailViewController.replyComment(_:)),#selector(TopicDetailViewController.thankComment(_:)),#selector(TopicDetailViewController.relevantComment(_:))][buttonIndex - 1], with: actionSheet.tag)
         }
     }
+    
     func replyComment(_ row:NSNumber){
         V2User.sharedInstance.ensureLoginWithHandler {
             let item = self.commentsArray[row as Int]
@@ -361,7 +383,9 @@ extension TopicDetailViewController: UIActionSheetDelegate {
             self.navigationController?.present(nav, animated: true, completion:nil)
         }
     }
+    
     func thankComment(_ row:NSNumber){
+        
         guard V2User.sharedInstance.isLogin else {
             V2Inform("请先登录")
             return;
@@ -390,6 +414,7 @@ extension TopicDetailViewController: UIActionSheetDelegate {
             }
         }
     }
+    
     func relevantComment(_ row:NSNumber){
         let item = self.commentsArray[row as Int]
         let relevantComments = TopicCommentModel.getRelevantCommentsInArray(self.commentsArray, firstComment: item)
@@ -402,16 +427,17 @@ extension TopicDetailViewController: UIActionSheetDelegate {
 }
 
 
-
 //MARK: - V2ActivityView
 enum V2ActivityViewTopicDetailAction : Int {
     case block = 0, favorite, grade, explore
 }
 
 extension TopicDetailViewController: V2ActivityViewDataSource {
+    
     func V2ActivityView(_ activityView: V2ActivityViewController, numberOfCellsInSection section: Int) -> Int {
         return 4
     }
+    
     func V2ActivityView(_ activityView: V2ActivityViewController, ActivityAtIndexPath indexPath: IndexPath) -> V2Activity {
         return V2Activity(title: [
             NSLocalizedString("ignore"),
@@ -496,13 +522,15 @@ extension TopicDetailViewController: V2ActivityViewDataSource {
     }
     
     func reply(){
+    
         self.activityView?.dismiss()
+        
         V2User.sharedInstance.ensureLoginWithHandler {
+            
             let replyViewController = ReplyingViewController()
             replyViewController.topicModel = self.model!
             let nav = V2EXNavigationController(rootViewController:replyViewController)
             self.navigationController?.present(nav, animated: true, completion:nil)
         }
     }
-    
 }

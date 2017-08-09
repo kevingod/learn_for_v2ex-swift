@@ -9,6 +9,8 @@
 import UIKit
 import OnePasswordExtension
 
+//登录--控制器
+
 public typealias LoginSuccessHandel = (String) -> Void
 
 class LoginViewController: UIViewController {
@@ -21,7 +23,9 @@ class LoginViewController: UIViewController {
     let passwordTextField = UITextField()
     let loginButton = UIButton()
     let cancelButton = UIButton()
+    
     override func viewDidLoad() {
+    
         super.viewDidLoad()
 
         self.hideKeyboardWhenTappedAround()
@@ -31,6 +35,7 @@ class LoginViewController: UIViewController {
 
         //初始化1Password
         if OnePasswordExtension.shared().isAppExtensionAvailable() {
+            
             let onepasswordButton = UIImageView(image: UIImage(named: "onepassword-button")?.withRenderingMode(.alwaysTemplate))
             onepasswordButton.isUserInteractionEnabled = true
             onepasswordButton.frame = CGRect(x: 0, y: 0, width: 34, height: 22)
@@ -45,18 +50,22 @@ class LoginViewController: UIViewController {
         self.loginButton.addTarget(self, action: #selector(LoginViewController.loginClick(_:)), for: .touchUpInside)
         self.cancelButton.addTarget(self, action: #selector(LoginViewController.cancelClick), for: .touchUpInside)
     }
+    
     override func viewDidAppear(_ animated: Bool) {
+       
         UIView.animate(withDuration: 2, animations: { () -> Void in
             self.backgroundImageView.alpha=1;
         }) 
+    
         UIView.animate(withDuration: 20, animations: { () -> Void in
             self.backgroundImageView.frame = CGRect(x: -1*( 1000 - SCREEN_WIDTH )/2, y: 0, width: SCREEN_HEIGHT+500, height: SCREEN_HEIGHT+500);
         }) 
     }
 
-
     func findLoginFrom1Password(){
+
         OnePasswordExtension.shared().findLogin(forURLString: "v2ex.com", for: self, sender: nil) { (loginDictionary, errpr) -> Void in
+        
             if let count = loginDictionary?.count , count > 0 {
                 self.userNameTextField.text = loginDictionary![AppExtensionUsernameKey] as? String
                 self.passwordTextField.text = loginDictionary![AppExtensionPasswordKey] as? String
@@ -66,12 +75,16 @@ class LoginViewController: UIViewController {
             }
         }
     }
+    
     func cancelClick (){
         self.dismiss(animated: true, completion: nil)
     }
+    
     func loginClick(_ sneder:UIButton){
+        
         var userName:String
         var password:String
+        
         if let len = self.userNameTextField.text?.Lenght , len > 0{
             userName = self.userNameTextField.text! ;
         }
@@ -87,6 +100,7 @@ class LoginViewController: UIViewController {
             self.passwordTextField.becomeFirstResponder()
             return;
         }
+        
         V2BeginLoadingWithStatus("正在登录")
         UserModel.Login(userName, password: password){
             (response:V2ValueResponse<String> , is2FALoggedIn:Bool) -> Void in
@@ -122,6 +136,7 @@ class LoginViewController: UIViewController {
 
 //MARK: - 点击文本框外收回键盘
 extension UIViewController {
+    
     func hideKeyboardWhenTappedAround() {
         let tap: UITapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(UIViewController.dismissKeyboard))
         view.addGestureRecognizer(tap)
@@ -134,7 +149,9 @@ extension UIViewController {
 
 //MARK: - 初始化界面
 extension LoginViewController {
+
     func setupView(){
+    
         self.view.backgroundColor = UIColor.black
 
         self.backgroundImageView.image = UIImage(named: "32.jpg")

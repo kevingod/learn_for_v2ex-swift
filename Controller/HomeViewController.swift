@@ -20,6 +20,7 @@ let kHomeTab = "me.fin.homeTab"
 //中间的话题列表 一堆cell
 
 class HomeViewController: UIViewController {
+    
     var topicList:Array<TopicListModel>?
     var tab:String? = nil
     var currentPage = 0
@@ -50,9 +51,16 @@ class HomeViewController: UIViewController {
     }
     
     override func viewDidLoad() {
+        
         super.viewDidLoad()
+        
+        //标题
         self.navigationItem.title="V2EX";
+        
+        //设置当前的tab字符串
         self.tab = V2EXSettings.sharedInstance[kHomeTab]
+        
+        //设置左右导航栏按钮
         self.setupNavigationItem()
         
         //监听程序即将进入前台运行、进入后台休眠 事件
@@ -60,6 +68,7 @@ class HomeViewController: UIViewController {
         NotificationCenter.default.addObserver(self, selector: #selector(HomeViewController.applicationDidEnterBackground), name: NSNotification.Name.UIApplicationDidEnterBackground, object: nil)
         
         self.view.addSubview(self.tableView);
+        
         self.tableView.snp.makeConstraints{ (make) -> Void in
             make.top.right.bottom.left.equalTo(self.view);
         }
@@ -78,12 +87,13 @@ class HomeViewController: UIViewController {
             self?.tableView.backgroundColor = V2EXColor.colors.v2_backgroundColor
         }
     }
+    
     func setupNavigationItem(){
+    
         let leftButton = NotificationMenuButton()
         leftButton.frame = CGRect(x: 0, y: 0, width: 40, height: 40)
         self.navigationItem.leftBarButtonItem = UIBarButtonItem(customView: leftButton)
         leftButton.addTarget(self, action: #selector(HomeViewController.leftClick), for: .touchUpInside)
-        
         
         let rightButton = UIButton(frame: CGRect(x: 0, y: 0, width: 40, height: 40))
         rightButton.contentMode = .center
@@ -91,8 +101,8 @@ class HomeViewController: UIViewController {
         rightButton.setImage(UIImage.imageUsedTemplateMode("ic_more_horiz_36pt")!.withRenderingMode(.alwaysTemplate), for: UIControlState())
         self.navigationItem.rightBarButtonItem = UIBarButtonItem(customView: rightButton)
         rightButton.addTarget(self, action: #selector(HomeViewController.rightClick), for: .touchUpInside)
-
     }
+    
     func leftClick(){
         V2Client.sharedInstance.drawerController?.toggleLeftDrawerSide(animated: true, completion: nil)
     }
@@ -104,6 +114,7 @@ class HomeViewController: UIViewController {
         self.tableView.mj_header.beginRefreshing();
         V2EXSettings.sharedInstance[kHomeTab] = tab
     }
+    
     func refresh(){
         
         //如果有上拉加载更多 正在执行，则取消它
@@ -113,6 +124,7 @@ class HomeViewController: UIViewController {
         
         //根据 tab name 获取帖子列表
         TopicListModel.getTopicList(tab){
+            
             (response:V2ValueResponse<[TopicListModel]>) -> Void in
             
             if response.success {
@@ -140,10 +152,12 @@ class HomeViewController: UIViewController {
     }
     
     func getNextPage(){
+        
         if let count = self.topicList?.count , count <= 0{
             self.tableView.mj_footer.endRefreshing()
             return;
         }
+        
         //根据 tab name 获取帖子列表
         self.currentPage += 1
         TopicListModel.getTopicList(tab,page: self.currentPage){
